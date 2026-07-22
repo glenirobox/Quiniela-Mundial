@@ -1,5 +1,10 @@
-public class Notificacion
+using System;
+namespace SistemaQuinielas.Models
 {
-    public string Mensaje { get; set; } = string.Empty;
-    public DateTime Fecha { get; set; }
+    public class Notificacion
+    {
+        public string Mensaje { get; set; } = string.Empty;
+        public DateTime Fecha { get; set; }
+    }
+
 }
