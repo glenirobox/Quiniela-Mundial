@@ -1,6 +1,14 @@
 using System;
+
 namespace SistemaQuinielas.Models
 {
+    public enum EstadoPartido
+    {
+        Pendiente,
+        EnCurso,
+        Finalizado
+    }
+
     public class Partido
     {
         public int Id { get; set; }
@@ -9,6 +17,7 @@ namespace SistemaQuinielas.Models
         public DateTime Fecha { get; set; }
         public int GolesLocal { get; set; }
         public int GolesVisitante { get; set; }
+        public EstadoPartido Estado { get; set; } = EstadoPartido.Pendiente;
+        public string Grupo { get; set; } = string.Empty;
     }
-
 }

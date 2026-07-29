@@ -1,0 +1,7 @@
+Id;Nombre;Descripcion
+1;Primero en Ranking Global;Usuario con mas puntos en todo el sistema
+2;Peor del Ranking Global;Usuario con menos puntos en todo el sistema
+3;Rey de los Empates;Usuario que mas veces acerto el marcador exacto en partidos empatados
+4;Racha de mas de 10 aciertos;Usuario con 10 o mas pronosticos acertados en total
+5;Primero en Quiniela Privada;Usuario con mas puntos dentro de una quiniela privada
+6;Peor Jugador de la Liga;Usuario con menos puntos dentro de una quiniela privada

@@ -9,10 +9,45 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Models\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Views\" />
+    <Content Include="bin\Debug\net10.0-windows\SistemaQuinielas.deps.json" />
+    <Content Include="bin\Debug\net10.0-windows\SistemaQuinielas.runtimeconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="bin\Release\net10.0-windows\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bin\Debug\net10.0-windows\Data\notificaciones.csv" />
+    <None Include="bin\Debug\net10.0-windows\Data\partidos.csv" />
+    <None Include="bin\Debug\net10.0-windows\Data\pronosticos.csv" />
+    <None Include="bin\Debug\net10.0-windows\Data\quinielas.csv" />
+    <None Include="bin\Debug\net10.0-windows\Data\selecciones.csv" />
+    <None Include="bin\Debug\net10.0-windows\Data\usuarios.csv" />
+    <None Include="bin\Debug\net10.0-windows\SistemaQuinielas.dll" />
+    <None Include="bin\Debug\net10.0-windows\SistemaQuinielas.exe" />
+    <None Include="bin\Debug\net10.0-windows\SistemaQuinielas.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\notificaciones.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\partidos.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\pronosticos.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\quinielas.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\selecciones.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\usuarios.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
