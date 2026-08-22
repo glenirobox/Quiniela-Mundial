@@ -5,6 +5,6 @@ namespace SistemaQuinielas.Models
     {
         public int IdQuiniela { get; set; }
         public string Mensaje { get; set; } = string.Empty;
-        public DateTime Fecha { get; set; }
+        public DateTime Fecha { get; set; } = DateTime.Now;
     }
 }

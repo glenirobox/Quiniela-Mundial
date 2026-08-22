@@ -1,91 +1,114 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using SistemaQuinielas.Models;
 using System.Windows.Forms;
+using SistemaQuinielas.Models;
 
-namespace SistemaQuinielas.Services
+namespace SistemaQuinielas.Services;
+
+public class QuinielaService
 {
-    public class QuinielaService
+    private readonly string RutaQuinielas = Path.Combine(
+        Application.StartupPath, "Data", "quinielas.csv"
+    );
+
+    public List<Quiniela> ObtenerQuinielas()
     {
-        private readonly string RutaQuinielas = Path.Combine(Application.StartupPath, "Data", "quinielas.csv");
+        List<Quiniela> quinielas = new List<Quiniela>();
 
-        public List<Quiniela> ObtenerQuinielas()
+        if (!File.Exists(RutaQuinielas)) return quinielas;
+
+        using StreamReader lector = new StreamReader(RutaQuinielas);
+        lector.ReadLine(); // Ignorar encabezado
+
+        while (!lector.EndOfStream)
         {
-            List<Quiniela> quinielas = new List<Quiniela>();
+            string? linea = lector.ReadLine();
+            if (string.IsNullOrWhiteSpace(linea)) continue;
 
-            if (!File.Exists(RutaQuinielas))
+            string[] datos = linea.Split(';');
+            if (datos.Length < 4) continue;
+
+            Quiniela q = new Quiniela
             {
-                return quinielas;
+                Id = int.Parse(datos[0]),
+                Nombre = datos[1],
+                EsPrivada = bool.Parse(datos[2]),
+                IdCreador = int.Parse(datos[3]),
+                IdsUsuarios = new List<int>()
+            };
+
+            if (datos.Length >= 5 && !string.IsNullOrWhiteSpace(datos[4]))
+            {
+                string[] idsStr = datos[4].Split(',');
+                foreach (string id in idsStr)
+                {
+                    q.IdsUsuarios.Add(int.Parse(id));
+                }
             }
 
-            using StreamReader lector = new StreamReader(RutaQuinielas);
-            lector.ReadLine();
-            while (!lector.EndOfStream)
-            {
-                string linea = lector.ReadLine() ?? string.Empty;
-                if (string.IsNullOrWhiteSpace(linea)) continue;
-
-                string[] datos = linea.Split(';');
-                if (datos.Length < 4) continue;
-
-                Quiniela q = new Quiniela();
-                q.Id = int.Parse(datos[0]);
-                q.Nombre = datos[1];
-                q.EsPrivada = bool.Parse(datos[2]);
-                q.IdCreador = int.Parse(datos[3]);
-                q.IdsUsuarios = datos.Length >= 5 && !string.IsNullOrWhiteSpace(datos[4])
-                    ? datos[4].Split(',').Select(int.Parse).ToList()
-                    : new List<int>();
-
-                quinielas.Add(q);
-            }
-            return quinielas;
+            quinielas.Add(q);
         }
 
-        public void GuardarQuinielas(List<Quiniela> quinielas)
-        {
-            using StreamWriter escritor = new StreamWriter(RutaQuinielas, false);
-            escritor.WriteLine("Id;Nombre;EsPrivada;IdCreador;IdsUsuarios");
+        return quinielas;
+    }
 
-            foreach (Quiniela q in quinielas)
+    public void GuardarQuinielas(List<Quiniela> quinielas)
+    {
+        using StreamWriter escritor = new StreamWriter(RutaQuinielas, false);
+        escritor.WriteLine("Id;Nombre;EsPrivada;IdCreador;IdsUsuarios");
+
+        foreach (Quiniela q in quinielas)
+        {
+            string usuarios = string.Join(",", q.IdsUsuarios);
+            escritor.WriteLine($"{q.Id};{q.Nombre};{q.EsPrivada};{q.IdCreador};{usuarios}");
+        }
+    }
+
+    public void CrearQuiniela(Quiniela nueva)
+    {
+        List<Quiniela> quinielas = ObtenerQuinielas();
+
+        int nuevoId = 1;
+        foreach (Quiniela q in quinielas)
+        {
+            if (q.Id >= nuevoId) nuevoId = q.Id + 1;
+        }
+
+        nueva.Id = nuevoId;
+
+        if (!nueva.IdsUsuarios.Contains(nueva.IdCreador))
+        {
+            nueva.IdsUsuarios.Add(nueva.IdCreador);
+        }
+
+        quinielas.Add(nueva);
+        GuardarQuinielas(quinielas);
+    }
+
+    public void UnirUsuarioAQuiniela(int idQuiniela, int idUsuario)
+    {
+        List<Quiniela> quinielas = ObtenerQuinielas();
+
+        Quiniela? quinielaEncontrada = null;
+        foreach (Quiniela q in quinielas)
+        {
+            if (q.Id == idQuiniela)
             {
-                string usuarios = string.Join(",", q.IdsUsuarios);
-                escritor.WriteLine($"{q.Id};{q.Nombre};{q.EsPrivada};{q.IdCreador};{usuarios}");
+                quinielaEncontrada = q;
+                break;
             }
         }
 
-        public void CrearQuiniela(Quiniela nueva)
+        if (quinielaEncontrada == null)
         {
-            List<Quiniela> quinielas = ObtenerQuinielas();
-            int nuevoId = quinielas.Count > 0 ? quinielas.Max(q => q.Id) + 1 : 1;
+            throw new Exception("La quiniela no existe.");
+        }
 
-            nueva.Id = nuevoId;
-            if (!nueva.IdsUsuarios.Contains(nueva.IdCreador))
-            {
-                nueva.IdsUsuarios.Add(nueva.IdCreador);
-            }
-
-            quinielas.Add(nueva);
+        if (!quinielaEncontrada.IdsUsuarios.Contains(idUsuario))
+        {
+            quinielaEncontrada.IdsUsuarios.Add(idUsuario);
             GuardarQuinielas(quinielas);
-        }
-
-        public void UnirUsuarioAQuiniela(int idQuiniela, int idUsuario)
-        {
-            List<Quiniela> quinielas = ObtenerQuinielas();
-            Quiniela? quiniela = quinielas.Find(q => q.Id == idQuiniela);
-
-            if (quiniela == null)
-            {
-                throw new Exception("La quiniela no existe.");
-            }
-
-            if (!quiniela.IdsUsuarios.Contains(idUsuario))
-            {
-                quiniela.IdsUsuarios.Add(idUsuario);
-                GuardarQuinielas(quinielas);
-            }
         }
     }
 }

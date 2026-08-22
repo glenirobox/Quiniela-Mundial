@@ -4,7 +4,6 @@ namespace SistemaQuinielas.Models
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
-        public string Bandera { get; set; } = string.Empty;
     }
 
 }
