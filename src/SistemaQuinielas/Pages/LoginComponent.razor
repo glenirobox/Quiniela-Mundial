@@ -1,0 +1,87 @@
+@page "/"
+@using SistemaQuinielas.Models
+@using SistemaQuinielas.Data
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<div id="LoginComponentComponent">
+    <section class="py-3 py-md-5 py-xl-8">
+        <section class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-5">
+                        <h2 class="display-5 fw-bold text-center">Sign up</h2>
+                        <p class="text-center m-0">Already have an account? <a href="#!" class="link-primary text-decoration-none">Sign in</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-10 col-xl-8">
+                    <div class="row gy-5 justify-content-center">
+                        <div class="col-12 col-lg-5">
+                            <div class="row gy-3 overflow-hidden">
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <label>Enter your name:</label>
+                                        <input @bind-value=@Name type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <label>Enter your password:</label>
+                                        <input @bind-value=@Password type="password" />
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button class="btn btn-primary btn-block" @onclick="Login">Login</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+
+@code
+{
+    private string Name { get; set; } = string.Empty;
+
+    private string Password { get; set; } = string.Empty;
+
+    private void Login()
+    {
+        Usuario? usuario = null;
+        foreach (var u in DatosMemoria.Usuarios)
+        {
+            if (u.Nombre == Name && u.Contrasena == Password)
+            {
+                usuario = u;
+                break;
+            }
+        }
+
+        if (usuario != null && usuario.Activo)
+        {
+            DatosMemoria.UsuarioLogueado = usuario;
+
+            if (usuario.Rol == "Admin")
+            {
+                NavigationManager.NavigateTo("/maintainance");
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/home");
+            }
+        }
+        else
+        {
+            this.Name = string.Empty;
+            this.Password = string.Empty;
+        }
+    }
+}
