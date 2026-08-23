@@ -1,0 +1,59 @@
+@using SistemaQuinielas.Models
+@using SistemaQuinielas.Data
+
+@rendermode InteractiveServer
+
+<PageTitle>Ranking</PageTitle>
+
+<h3>TopScorers</h3>
+
+<div class="table-class">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Score</th>
+        </tr>
+
+        @foreach (var item in ObtenerRanking())
+        {
+            <tr>
+                <td>@item.Nombre</td>
+                <td>@item.PuntosTotales</td>
+            </tr>
+        }
+    </table>
+</div>
+
+<style>
+    .table-class {
+        margin-left: 20%;
+        margin-right: 20%;
+        margin-top: 20px;
+    }
+
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+@code {
+    private List<Usuario> ObtenerRanking()
+    {
+        // Trae los usuarios ordenados por puntos (o Id) simulación al estilo del profesor
+        return DatosMemoria.Usuarios?
+            .OrderByDescending(u => u.Id * 10)
+            .ToList() ?? new List<Usuario>();
+    }
+}

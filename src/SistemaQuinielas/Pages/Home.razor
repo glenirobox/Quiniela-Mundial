@@ -1,0 +1,87 @@
+@page "/home"
+@using SistemaQuinielas.Models
+@using SistemaQuinielas.Data
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<div id="HomeComponent">
+    <section class="py-3 py-md-5">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-12 text-center">
+                    <h2 class="display-6 fw-bold">Bienvenido, @usuarioActual?.Nombre</h2>
+                    <p class="text-muted">Panel Principal - Sistema de Quinielas</p>
+                </div>
+            </div>
+
+            <div class="row justify-content-center gy-4">
+                <div class="col-12 col-md-5">
+                    <div class="card shadow-sm text-center p-4 h-100">
+                        <h4 class="fw-bold mb-3">Mis Quinielas</h4>
+                        <p class="text-secondary">Consulta y participa en las quinielas disponibles.</p>
+                        <button class="btn btn-primary mt-auto" @onclick="VerQuinielas">Ver Quinielas</button>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-5">
+                    <div class="card shadow-sm text-center p-4 h-100">
+                        <h4 class="fw-bold mb-3">Notificaciones</h4>
+                        <p class="text-secondary">Revisa los avisos y novedades recientes.</p>
+                        <button class="btn btn-outline-primary mt-auto" @onclick="VerNotificaciones">Ver Notificaciones</button>
+                    </div>
+                </div>
+                
+                <!-- COMPONENTE DE MANTENIMIENTO -->
+                <div class="col-12 col-md-10 mt-4">
+                    <MaintainanceComponent />
+                </div>
+
+                <!-- COMPONENTE DE PRONÓSTICOS -->
+                <div class="col-12 col-md-10 mt-4">
+                    <QuinielaComponent />
+                </div>
+
+                <!-- COMPONENTE DE RANKING -->
+                <div class="col-12 col-md-10 mt-4">
+                    <RankingComponent />
+                </div>
+            </div>
+
+            <div class="row mt-5 text-center">
+                <div class="col-12">
+                    <button class="btn btn-danger" @onclick="CerrarSesion">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@code {
+    private Usuario? usuarioActual;
+
+    protected override void OnInitialized()
+    {
+        usuarioActual = DatosMemoria.UsuarioLogueado;
+
+        if (usuarioActual == null)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private void VerQuinielas()
+    {
+        NavigationManager.NavigateTo("/quinielas");
+    }
+
+    private void VerNotificaciones()
+    {
+        NavigationManager.NavigateTo("/notifications");
+    }
+
+    private void CerrarSesion()
+    {
+        DatosMemoria.UsuarioLogueado = null;
+        NavigationManager.NavigateTo("/");
+    }
+}

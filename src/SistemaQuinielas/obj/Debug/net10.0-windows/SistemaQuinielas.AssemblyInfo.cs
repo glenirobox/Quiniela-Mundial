@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SistemaQuinielas")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9160b51677d092d831f9f837bb67f7f32631b9d9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da11c6ba84f65f485a47bc19f7817d406798fd9d")]
 [assembly: System.Reflection.AssemblyProductAttribute("SistemaQuinielas")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SistemaQuinielas")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

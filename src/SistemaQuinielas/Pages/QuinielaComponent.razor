@@ -1,0 +1,72 @@
+@using SistemaQuinielas.Models
+@using SistemaQuinielas.Data
+
+@rendermode InteractiveServer
+
+<div class="card shadow-sm p-4 mt-4">
+    <h3 class="text-primary mb-3"><i class="bi bi-controller me-2"></i>Pronósticos de la Jornada</h3>
+    <p class="text-muted">Ingresa tus predicciones para los partidos disponibles.</p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Equipo Local</th>
+                    <th>Marcador Local</th>
+                    <th>vs</th>
+                    <th>Marcador Visitante</th>
+                    <th>Equipo Visitante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="fw-bold">Costa Rica</td>
+                    <td style="width: 100px;">
+                        <input type="number" class="form-control text-center" @bind="golesLocal1" min="0" />
+                    </td>
+                    <td>-</td>
+                    <td style="width: 100px;">
+                        <input type="number" class="form-control text-center" @bind="golesVisitante1" min="0" />
+                    </td>
+                    <td class="fw-bold">Alemania</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Brasil</td>
+                    <td style="width: 100px;">
+                        <input type="number" class="form-control text-center" @bind="golesLocal2" min="0" />
+                    </td>
+                    <td>-</td>
+                    <td style="width: 100px;">
+                        <input type="number" class="form-control text-center" @bind="golesVisitante2" min="0" />
+                    </td>
+                    <td class="fw-bold">España</td>
+                </tr>
+            </tbody>
+         </table>
+    </div>
+
+    <div class="text-end mt-3">
+        <button class="btn btn-success" @onclick="GuardarPronosticos">Guardar Predicciones</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(mensajeConfirmacion))
+    {
+        <div class="alert alert-success mt-3 mb-0" role="alert">
+            @mensajeConfirmacion
+        </div>
+    }
+</div>
+
+@code {
+    private int golesLocal1 = 0;
+    private int golesVisitante1 = 0;
+    private int golesLocal2 = 0;
+    private int golesVisitante2 = 0;
+
+    private string mensajeConfirmacion = "";
+
+    private void GuardarPronosticos()
+    {
+        mensajeConfirmacion = "¡Tus pronósticos se han guardado exitosamente!";
+    }
+}

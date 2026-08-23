@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="bin\Release\net10.0-windows\" />
+    <Folder Include="Pages\" />
   </ItemGroup>
 
   <ItemGroup>
