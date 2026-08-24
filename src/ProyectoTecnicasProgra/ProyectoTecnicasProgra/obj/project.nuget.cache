@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "LvgUlBU7X+g=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Home\\Downloads\\QuinielaMundial\\src\\ProyectoTecnicasProgra\\ProyectoTecnicasProgra\\ProyectoTecnicasProgra.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Home\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.10\\microsoft.aspnetcore.app.internal.assets.10.0.10.nupkg.sha512"
+  ],
+  "logs": []
+}
