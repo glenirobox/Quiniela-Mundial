@@ -1,0 +1,120 @@
+﻿@page "/posiciones"
+@using ProyectoTecnicasProgra.Data
+@using ProyectoTecnicasProgra.Models
+@inject DatosMemoria Datos
+@inject NavigationManager Navigation
+
+<PageTitle>Tabla de Posiciones - Quiniela Mundial</PageTitle>
+
+<div class="container py-4">
+    <h2 class="mb-4">Tabla de Posiciones</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="text-center" style="width: 80px;">Pos.</th>
+                            <th>Usuario</th>
+                            <th class="text-center">Pronósticos Guardados</th>
+                            <th class="text-center">Puntos Totales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int posicion = 1;
+                        }
+                        @foreach (var fila in TablaOrdenada)
+                        {
+                            <tr class="@(fila.Username == Datos.UsuarioActual?.Username ? "table-primary fw-bold" : "")">
+                                <td class="text-center">@posicion</td>
+                                <td>@fila.Username</td>
+                                <td class="text-center">@fila.PronosticosRealizados</td>
+                                <td class="text-center fs-5 text-success">@fila.PuntosTotales pts</td>
+                            </tr>
+                            posicion++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private class PosicionUsuario
+    {
+        public string Username { get; set; } = string.Empty;
+        public int PronosticosRealizados { get; set; }
+        public int PuntosTotales { get; set; }
+    }
+
+    private List<PosicionUsuario> TablaOrdenada = new();
+
+    protected override void OnInitialized()
+    {
+        if (Datos.UsuarioActual == null)
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        CalcularTablaPosiciones();
+    }
+
+    private void CalcularTablaPosiciones()
+    {
+        TablaOrdenada.Clear();
+
+        foreach (var usuario in Datos.Usuarios)
+        {
+            int puntos = 0;
+            var pronosticosDelUsuario = Datos.Pronosticos.Where(p => p.Username == usuario.Username).ToList();
+
+            foreach (var pronostico in pronosticosDelUsuario)
+            {
+                var partido = Datos.Partidos.FirstOrDefault(p => p.Id == pronostico.PartidoId && p.Finalizado);
+
+                if (partido != null && partido.GolesLocal.HasValue && partido.GolesVisitante.HasValue)
+                {
+                    puntos += CalcularPuntosPartido(
+                        pronostico.GolesLocalPredichos,
+                        pronostico.GolesVisitantePredichos,
+                        partido.GolesLocal.Value,
+                        partido.GolesVisitante.Value
+                    );
+                }
+            }
+
+            TablaOrdenada.Add(new PosicionUsuario
+            {
+                Username = usuario.Username,
+                PronosticosRealizados = pronosticosDelUsuario.Count,
+                PuntosTotales = puntos
+            });
+        }
+
+        TablaOrdenada = TablaOrdenada.OrderByDescending(t => t.PuntosTotales).ThenBy(t => t.Username).ToList();
+    }
+
+    private int CalcularPuntosPartido(int localPred, int visitantePred, int localReal, int visitanteReal)
+    {
+        // Marcador exacto -> 3 puntos
+        if (localPred == localReal && visitantePred == visitanteReal)
+        {
+            return 3;
+        }
+
+        // Tendencia/Ganador o empate correcto -> 1 punto
+        int signoPredicho = localPred.CompareTo(visitantePred);
+        int signoReal = localReal.CompareTo(visitanteReal);
+
+        if (signoPredicho == signoReal)
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+}
