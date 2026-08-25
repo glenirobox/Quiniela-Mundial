@@ -1,7 +1,6 @@
 @page "/"
-@using SistemaQuinielas.Models
-@using SistemaQuinielas.Data
 @rendermode InteractiveServer
+@using SistemaQuinielas.Models
 @inject NavigationManager NavigationManager
 
 <div id="LoginComponentComponent">
@@ -23,19 +22,19 @@
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
                                         <label>Enter your name:</label>
-                                        <input @bind-value=@Name type="text" />
+                                        <input @bind="Name" type="text" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
                                         <label>Enter your password:</label>
-                                        <input @bind-value=@Password type="password" />
+                                        <input @bind="Password" type="password" class="form-control" />
                                     </div>
                                 </div>
 
                                 <div class="col-12">
                                     <div class="d-grid">
-                                        <button class="btn btn-primary btn-block" @onclick="Login">Login</button>
+                                        <button type="button" class="btn btn-primary btn-block" @onclick="Login">Login</button>
                                     </div>
                                 </div>
                             </div>

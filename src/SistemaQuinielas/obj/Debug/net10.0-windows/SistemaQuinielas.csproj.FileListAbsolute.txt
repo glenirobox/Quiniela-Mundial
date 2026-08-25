@@ -28,3 +28,7 @@ C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas\obj\Debug\net10.0-w
 C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas\obj\Debug\net10.0-windows\SistemaQuinielas.Views.FrmQuiniela.resources
 C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas\obj\Debug\net10.0-windows\SistemaQuinielas.Views.FrmPronostico.resources
 C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas\obj\Debug\net10.0-windows\SistemaQuinielas.Views.FrmEstadisticas.resources
+C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas\obj\Debug\net10.0-windows\EmbeddedAttribute.cs
+C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas\obj\Debug\net10.0-windows\ValidatableTypeAttribute.cs
+C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas\obj\Debug\net10.0-windows\rpswa.dswa.cache.json
+C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas\obj\Debug\net10.0-windows\SistemaQuinielas.MvcApplicationPartsAssemblyInfo.cache

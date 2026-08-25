@@ -1,18 +1,27 @@
-using SistemaQuinielas.Views;
-namespace SistemaQuinielas
+using SistemaQuinielas.Pages;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Registrar Blazor e Interactividad Servidor
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
 {
-    internal static class Program
-    {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new FrmLogin());
-        }
-    }
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
+
+// Requerido en .NET 9/10 para entregar blazor.web.js y contenido estático
+app.MapStaticAssets();
+
+app.UseAntiforgery();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
+
+app.Run();

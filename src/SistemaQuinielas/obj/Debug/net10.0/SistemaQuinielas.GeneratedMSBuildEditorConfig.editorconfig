@@ -1,0 +1,56 @@
+is_global = true
+build_property.TargetFramework = net10.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EntryPointFilePath = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = SistemaQuinielas
+build_property.RootNamespace = SistemaQuinielas
+build_property.ProjectDir = C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 10.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Home\Downloads\QuinielaMundial\src\SistemaQuinielas
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/Home/Downloads/QuinielaMundial/src/SistemaQuinielas/Pages/App.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Downloads/QuinielaMundial/src/SistemaQuinielas/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Downloads/QuinielaMundial/src/SistemaQuinielas/Pages/LoginComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5Db21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Downloads/QuinielaMundial/src/SistemaQuinielas/Pages/MaintainanceComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFpbnRhaW5hbmNlQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Downloads/QuinielaMundial/src/SistemaQuinielas/Pages/QuinielaComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVpbmllbGFDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Downloads/QuinielaMundial/src/SistemaQuinielas/Pages/RankingComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmFua2luZ0NvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Downloads/QuinielaMundial/src/SistemaQuinielas/Pages/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUm91dGVzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Home/Downloads/QuinielaMundial/src/SistemaQuinielas/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
