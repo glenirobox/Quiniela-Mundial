@@ -1,0 +1,132 @@
+﻿@page "/quiniela"
+@using ProyectoTecnicasProgra.Data
+@using ProyectoTecnicasProgra.Models
+@inject DatosMemoria Datos
+@inject NavigationManager Navigation
+
+<PageTitle>Mis Pronósticos - Quiniela Mundial</PageTitle>
+
+<div class="container py-4">
+    <h2 class="mb-4">Ingresar Mis Pronósticos</h2>
+
+    @if (!string.IsNullOrEmpty(mensajeExito))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @mensajeExito
+        </div>
+    }
+
+    <div class="row g-3">
+        @foreach (var partido in Datos.Partidos)
+        {
+            var pronosticoActual = ObtenerOManternerPronostico(partido.Id);
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm h-100 border-@(partido.Finalizado ? "secondary" : "primary")">
+                    <div class="card-header bg-transparent text-center fw-bold">
+                        @partido.Fecha.ToString("dd/MM/yyyy HH:mm")
+                        @if (partido.Finalizado)
+                        {
+                            <span class="badge bg-secondary ms-2">Finalizado</span>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="fw-bold fs-6">@partido.EquipoLocal</span>
+                            <input type="number" min="0" class="form-control text-center mx-2" style="width: 60px;"
+                                   disabled="@partido.Finalizado"
+                                   @bind="pronosticoActual.GolesLocalPredichos" />
+                            <span>VS</span>
+                            <input type="number" min="0" class="form-control text-center mx-2" style="width: 60px;"
+                                   disabled="@partido.Finalizado"
+                                   @bind="pronosticoActual.GolesVisitantePredichos" />
+                            <span class="fw-bold fs-6">@partido.EquipoVisitante</span>
+                        </div>
+
+                        @if (partido.Finalizado)
+                        {
+                            <div class="text-center text-muted small">
+                                Resultado Oficial: <strong>@partido.GolesLocal - @partido.GolesVisitante</strong>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="mt-4 text-end">
+        <button class="btn btn-success btn-lg" @onclick="GuardarPronosticos">
+            Guardar Pronósticos
+        </button>
+    </div>
+</div>
+
+@code {
+    private Dictionary<int, Pronostico> mapaPronosticos = new();
+    private string mensajeExito = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        if (Datos.UsuarioActual == null)
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        foreach (var partido in Datos.Partidos)
+        {
+            var existente = Datos.Pronosticos.FirstOrDefault(p =>
+                p.Username == Datos.UsuarioActual.Username && p.PartidoId == partido.Id);
+
+            if (existente != null)
+            {
+                mapaPronosticos[partido.Id] = new Pronostico
+                {
+                    Id = existente.Id,
+                    Username = existente.Username,
+                    PartidoId = existente.PartidoId,
+                    GolesLocalPredichos = existente.GolesLocalPredichos,
+                    GolesVisitantePredichos = existente.GolesVisitantePredichos,
+                    PuntosObtenidos = existente.PuntosObtenidos
+                };
+            }
+            else
+            {
+                mapaPronosticos[partido.Id] = new Pronostico
+                {
+                    Username = Datos.UsuarioActual.Username,
+                    PartidoId = partido.Id
+                };
+            }
+        }
+    }
+
+    private Pronostico ObtenerOManternerPronostico(int partidoId)
+    {
+        return mapaPronosticos[partidoId];
+    }
+
+    private void GuardarPronosticos()
+    {
+        if (Datos.UsuarioActual == null) return;
+
+        foreach (var item in mapaPronosticos.Values)
+        {
+            var existente = Datos.Pronosticos.FirstOrDefault(p =>
+                p.Username == item.Username && p.PartidoId == item.PartidoId);
+
+            if (existente != null)
+            {
+                existente.GolesLocalPredichos = item.GolesLocalPredichos;
+                existente.GolesVisitantePredichos = item.GolesVisitantePredichos;
+            }
+            else
+            {
+                Datos.Pronosticos.Add(item);
+            }
+        }
+
+        mensajeExito = "¡Pronósticos guardados correctamente!";
+    }
+}
