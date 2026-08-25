@@ -1,7 +1,44 @@
 ﻿@page "/home"
+@using ProyectoTecnicasProgra.Data
+@inject DatosMemoria Datos
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Inicio - Quiniela Mundialista</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container py-4">
+    <div class="p-4 mb-4 bg-light rounded-3 border">
+        <h1 class="display-6 fw-bold">¡Bienvenido, @(Datos.UsuarioActual?.Username ?? "Invitado")!</h1>
+        <p class="fs-5 text-muted">
+            Rol actual: <span class="badge bg-primary">@(Datos.UsuarioActual?.Rol ?? "Sin Rol")</span>
+        </p>
+        <hr class="my-3">
+        <p>Selecciona una opción del menú lateral para gestionar tus quinielas, ver el ranking de participantes o administrar los partidos del mundial.</p>
+    </div>
 
-Welcome to your new app.
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Mis Pronósticos</h5>
+                    <p class="card-text">Ingresa tus predicciones para los próximos encuentros.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 bg-secondary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Tabla de Posiciones</h5>
+                    <p class="card-text">Revisa tu lugar en el ranking global de la quiniela.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Partidos</h5>
+                    <p class="card-text">Consulta los horarios y resultados del torneo mundialista.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
