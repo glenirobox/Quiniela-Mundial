@@ -1,5 +1,7 @@
 ﻿namespace ProyectoTecnicasProgra.Models;
-
+/// <summary>
+/// Modelo que almacena la información de los encuentros, resultados y estado del partido.
+/// </summary>
 public class Partido
 {
     public int Id { get; set; }

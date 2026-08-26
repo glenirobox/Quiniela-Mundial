@@ -1,5 +1,8 @@
 ﻿namespace ProyectoTecnicasProgra.Models
 {
+    /// <summary>
+    /// Entidad que gestiona la información, rol y los logros obtenidos por un usuario.
+    /// </summary>
     public class Usuario
     {
         public string Username { get; set; } = string.Empty;

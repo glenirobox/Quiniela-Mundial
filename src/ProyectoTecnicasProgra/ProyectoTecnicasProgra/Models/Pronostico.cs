@@ -1,5 +1,7 @@
 ﻿namespace ProyectoTecnicasProgra.Models;
-
+/// <summary>
+/// Modelo que representa la predicción de un marcador para un partido.
+/// </summary>
 public class Pronostico
 {
     public int Id { get; set; }

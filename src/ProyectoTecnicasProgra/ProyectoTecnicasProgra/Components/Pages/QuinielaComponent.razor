@@ -4,6 +4,7 @@
 @inject DatosMemoria Datos
 @inject NavigationManager Navigation
 
+@* Componente para la captura, actualización y evaluación de los pronósticos de los usuarios. *@
 <PageTitle>Mis Pronósticos - Quiniela Mundial</PageTitle>
 
 <div class="container py-4">
@@ -71,6 +72,7 @@
     private Dictionary<int, InputPronostico> valoresInput = new();
     private string mensajeExito = string.Empty;
 
+    // Carga los marcadores previamente ingresados por el usuario activo
     protected override void OnInitialized()
     {
         if (Datos.UsuarioActual == null)
