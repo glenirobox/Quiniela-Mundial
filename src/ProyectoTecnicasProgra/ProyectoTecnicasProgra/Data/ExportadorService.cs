@@ -1,28 +1,34 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using ProyectoTecnicasProgra.Models;
 
 namespace ProyectoTecnicasProgra.Data
 {
     /// <summary>
-    /// Servicio encargado de generar archivos CSV a partir de listas de datos del sistema.
+    /// Servicio encargado de exportar datos del sistema a formatos descargables.
     /// </summary>
     public class ExportadorService
     {
         /// <summary>
-        /// Genera el contenido en formato CSV con la tabla de posiciones de la quiniela.
+        /// Genera un archivo CSV codificado en bytes a partir de una colección de objetos.
         /// </summary>
-        /// <param name="posiciones">Lista de datos de posiciones a exportar.</param>
-        /// <returns>Arreglo de bytes listo para su descarga.</returns>
+        /// <param name="posiciones">Colección de datos de posiciones o usuarios.</param>
+        /// <returns>Arreglo de bytes listo para descargar.</returns>
         public byte[] GenerarCsvPosiciones(IEnumerable<dynamic> posiciones)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Posicion,Usuario,Puntos");
+            sb.AppendLine("Usuario,Rol");
 
-            int pos = 1;
             foreach (var item in posiciones)
             {
-                sb.AppendLine($"{pos},{item.Nombre},{item.Puntos}");
-                pos++;
+                if (item is Usuario u)
+                {
+                    sb.AppendLine($"{u.Username},{u.Rol}");
+                }
+                else
+                {
+                    sb.AppendLine($"{item}");
+                }
             }
 
             return Encoding.UTF8.GetBytes(sb.ToString());

@@ -13,14 +13,13 @@
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             @mensajeExito
+            <button type="button" class="btn-close" @onclick="() => mensajeExito = string.Empty"></button>
         </div>
     }
 
     <div class="row g-3">
         @foreach (var partido in Datos.Partidos)
         {
-            var pronostico = ObtenerPronostico(partido.Id);
-
             <div class="col-md-6 col-lg-4">
                 <div class="card shadow-sm h-100 border-@(partido.Finalizado ? "secondary" : "primary")">
                     <div class="card-header bg-transparent text-center fw-bold">
@@ -100,43 +99,50 @@
         }
     }
 
-    private Pronostico? ObtenerPronostico(int partidoId)
-    {
-        return Datos.Pronosticos.FirstOrDefault(p =>
-            p.Username == Datos.UsuarioActual?.Username && p.PartidoId == partidoId);
-    }
-
     private void GuardarPronosticos()
     {
         if (Datos.UsuarioActual == null) return;
 
         foreach (var partido in Datos.Partidos)
         {
-            var input = valoresInput[partido.Id];
-
-            if (input.GolesLocal.HasValue && input.GolesVisitante.HasValue)
+            if (valoresInput.ContainsKey(partido.Id))
             {
-                var existente = Datos.Pronosticos.FirstOrDefault(p =>
-                    p.Username == Datos.UsuarioActual.Username && p.PartidoId == partido.Id);
+                var input = valoresInput[partido.Id];
 
-                if (existente != null)
+                if (input.GolesLocal.HasValue && input.GolesVisitante.HasValue)
                 {
-                    existente.GolesLocalPredichos = input.GolesLocal.Value;
-                    existente.GolesVisitantePredichos = input.GolesVisitante.Value;
-                }
-                else
-                {
-                    Datos.Pronosticos.Add(new Pronostico
+                    var existente = Datos.Pronosticos.FirstOrDefault(p =>
+                        p.Username == Datos.UsuarioActual.Username && p.PartidoId == partido.Id);
+
+                    if (existente != null)
                     {
-                        Username = Datos.UsuarioActual.Username,
-                        PartidoId = partido.Id,
-                        GolesLocalPredichos = input.GolesLocal.Value,
-                        GolesVisitantePredichos = input.GolesVisitante.Value
-                    });
+                        existente.GolesLocalPredichos = input.GolesLocal.Value;
+                        existente.GolesVisitantePredichos = input.GolesVisitante.Value;
+                    }
+                    else
+                    {
+                        Datos.Pronosticos.Add(new Pronostico
+                        {
+                            Username = Datos.UsuarioActual.Username,
+                            PartidoId = partido.Id,
+                            GolesLocalPredichos = input.GolesLocal.Value,
+                            GolesVisitantePredichos = input.GolesVisitante.Value
+                        });
+                    }
                 }
             }
         }
 
-        mensajeExito = "¡Pronósticos guardados correctamente!";
+        // Evaluar e insertar las insignias conseguidas por el usuario
+        var nuevasInsignias = Datos.VerificarYOtorgarInsignias(Datos.UsuarioActual.Username);
+
+        if (nuevasInsignias.Any())
+        {
+            mensajeExito = $"¡Pronósticos guardados!  ¡Has desbloqueado: {string.Join(", ", nuevasInsignias)}!";
+        }
+        else
+        {
+            mensajeExito = "¡Pronósticos guardados correctamente!";
+        }
     }
 }

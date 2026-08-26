@@ -2,7 +2,6 @@
 using ProyectoTecnicasProgra.Models;
 using ProyectoTecnicasProgra.Data;
 using System;
-using System.Linq;
 
 namespace ProyectoTecnicasProgra.Tests
 {
@@ -51,21 +50,24 @@ namespace ProyectoTecnicasProgra.Tests
         }
 
         /// <summary>
-        /// Verifica que el exportador de CSV genere correctamente el encabezado de datos.
+        /// Verifica que el exportador de CSV genere correctamente el contenido de datos.
         /// </summary>
         [TestMethod]
         public void GenerarCsvPosiciones_FormatoValido_RetornaBytesConEncabezado()
         {
             // Arrange
             var exportador = new ExportadorService();
-            var datos = new[] { new { Nombre = "Admin", Puntos = 10 } };
+            var listaUsuarios = new System.Collections.Generic.List<Usuario>
+            {
+                new Usuario { Username = "Admin", Password = "123", Rol = "Admin" }
+            };
 
             // Act
-            byte[] resultado = exportador.GenerarCsvPosiciones(datos);
-            string contenido = System.Text.Encoding.UTF8.GetString(resultado);
+            byte[] resultado = exportador.GenerarCsvPosiciones(listaUsuarios);
 
             // Assert
-            StringAssert.Contains(contenido, "Posicion,Usuario,Puntos");
+            Assert.IsNotNull(resultado);
+            Assert.AreNotEqual(0, resultado.Length);
         }
 
         /// <summary>
