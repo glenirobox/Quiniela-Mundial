@@ -19,7 +19,7 @@
     <div class="row g-3">
         @foreach (var partido in Datos.Partidos)
         {
-            var pronosticoActual = ObtenerOManternerPronostico(partido.Id);
+            var pronostico = ObtenerPronostico(partido.Id);
 
             <div class="col-md-6 col-lg-4">
                 <div class="card shadow-sm h-100 border-@(partido.Finalizado ? "secondary" : "primary")">
@@ -35,11 +35,11 @@
                             <span class="fw-bold fs-6">@partido.EquipoLocal</span>
                             <input type="number" min="0" class="form-control text-center mx-2" style="width: 60px;"
                                    disabled="@partido.Finalizado"
-                                   @bind="pronosticoActual.GolesLocalPredichos" />
+                                   @bind="valoresInput[partido.Id].GolesLocal" />
                             <span>VS</span>
                             <input type="number" min="0" class="form-control text-center mx-2" style="width: 60px;"
                                    disabled="@partido.Finalizado"
-                                   @bind="pronosticoActual.GolesVisitantePredichos" />
+                                   @bind="valoresInput[partido.Id].GolesVisitante" />
                             <span class="fw-bold fs-6">@partido.EquipoVisitante</span>
                         </div>
 
@@ -63,7 +63,13 @@
 </div>
 
 @code {
-    private Dictionary<int, Pronostico> mapaPronosticos = new();
+    private class InputPronostico
+    {
+        public int? GolesLocal { get; set; }
+        public int? GolesVisitante { get; set; }
+    }
+
+    private Dictionary<int, InputPronostico> valoresInput = new();
     private string mensajeExito = string.Empty;
 
     protected override void OnInitialized()
@@ -81,49 +87,53 @@
 
             if (existente != null)
             {
-                mapaPronosticos[partido.Id] = new Pronostico
+                valoresInput[partido.Id] = new InputPronostico
                 {
-                    Id = existente.Id,
-                    Username = existente.Username,
-                    PartidoId = existente.PartidoId,
-                    GolesLocalPredichos = existente.GolesLocalPredichos,
-                    GolesVisitantePredichos = existente.GolesVisitantePredichos,
-                    PuntosObtenidos = existente.PuntosObtenidos
+                    GolesLocal = existente.GolesLocalPredichos,
+                    GolesVisitante = existente.GolesVisitantePredichos
                 };
             }
             else
             {
-                mapaPronosticos[partido.Id] = new Pronostico
-                {
-                    Username = Datos.UsuarioActual.Username,
-                    PartidoId = partido.Id
-                };
+                valoresInput[partido.Id] = new InputPronostico();
             }
         }
     }
 
-    private Pronostico ObtenerOManternerPronostico(int partidoId)
+    private Pronostico? ObtenerPronostico(int partidoId)
     {
-        return mapaPronosticos[partidoId];
+        return Datos.Pronosticos.FirstOrDefault(p =>
+            p.Username == Datos.UsuarioActual?.Username && p.PartidoId == partidoId);
     }
 
     private void GuardarPronosticos()
     {
         if (Datos.UsuarioActual == null) return;
 
-        foreach (var item in mapaPronosticos.Values)
+        foreach (var partido in Datos.Partidos)
         {
-            var existente = Datos.Pronosticos.FirstOrDefault(p =>
-                p.Username == item.Username && p.PartidoId == item.PartidoId);
+            var input = valoresInput[partido.Id];
 
-            if (existente != null)
+            if (input.GolesLocal.HasValue && input.GolesVisitante.HasValue)
             {
-                existente.GolesLocalPredichos = item.GolesLocalPredichos;
-                existente.GolesVisitantePredichos = item.GolesVisitantePredichos;
-            }
-            else
-            {
-                Datos.Pronosticos.Add(item);
+                var existente = Datos.Pronosticos.FirstOrDefault(p =>
+                    p.Username == Datos.UsuarioActual.Username && p.PartidoId == partido.Id);
+
+                if (existente != null)
+                {
+                    existente.GolesLocalPredichos = input.GolesLocal.Value;
+                    existente.GolesVisitantePredichos = input.GolesVisitante.Value;
+                }
+                else
+                {
+                    Datos.Pronosticos.Add(new Pronostico
+                    {
+                        Username = Datos.UsuarioActual.Username,
+                        PartidoId = partido.Id,
+                        GolesLocalPredichos = input.GolesLocal.Value,
+                        GolesVisitantePredichos = input.GolesVisitante.Value
+                    });
+                }
             }
         }
 
