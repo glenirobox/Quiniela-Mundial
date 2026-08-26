@@ -1,0 +1,100 @@
+﻿@page "/admin-usuarios"
+@using ProyectoTecnicasProgra.Data
+@using ProyectoTecnicasProgra.Models
+@inject DatosMemoria Datos
+@inject NavigationManager Navigation
+
+<PageTitle>Mantenimiento de Usuarios - Quiniela Mundial</PageTitle>
+
+<div class="container my-4">
+    <h2 class="mb-4">Mantenimiento de Usuarios</h2>
+
+    @if (!string.IsNullOrEmpty(mensajeExito))
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-3">
+            @mensajeExito
+            <button type="button" class="btn-close" @onclick="CerrarMensaje"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Usuarios Registrados</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Rol</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Datos.Usuarios)
+                        {
+                            <tr>
+                                <td><strong>@u.Username</strong></td>
+                                <td>
+                                    @if (u.Rol == "Admin")
+                                    {
+                                        <span class="badge bg-danger">Admin</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary">Usuario</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (u.Rol != "Admin")
+                                    {
+                                        <button class="btn btn-warning btn-sm me-1" @onclick="() => ResetearContrasena(u)">
+                                            Reset Clave
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" @onclick="() => EliminarUsuario(u)">
+                                            Eliminar
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Protegido</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string mensajeExito = "";
+
+    protected override void OnInitialized()
+    {
+        if (Datos.UsuarioActual == null || Datos.UsuarioActual.Rol != "Admin")
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private void ResetearContrasena(Usuario u)
+    {
+        u.Password = "123456";
+        mensajeExito = "Contraseña de " + u.Username + " reseteada a 123456.";
+    }
+
+    private void EliminarUsuario(Usuario u)
+    {
+        Datos.Usuarios.Remove(u);
+        mensajeExito = "Usuario " + u.Username + " eliminado correctamente.";
+    }
+
+    private void CerrarMensaje()
+    {
+        mensajeExito = "";
+    }
+}
