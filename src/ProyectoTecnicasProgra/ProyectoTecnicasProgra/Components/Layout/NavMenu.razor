@@ -30,6 +30,15 @@
             </NavLink>
         </div>
 
+        @if (Datos.UsuarioActual?.Rol == "Admin")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="admin-partidos">
+                    <span class="bi bi-gear-fill-nav-menu" aria-hidden="true"></span> Admin Partidos
+                </NavLink>
+            </div>
+        }
+
         <div class="nav-item px-3">
             <button class="btn btn-link nav-link text-white w-100 text-start" @onclick="CerrarSesion">
                 <span class="bi bi-box-arrow-right" aria-hidden="true"></span> Cerrar Sesión

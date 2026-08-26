@@ -1,0 +1,161 @@
+﻿@page "/admin-partidos"
+@using ProyectoTecnicasProgra.Data
+@using ProyectoTecnicasProgra.Models
+@inject DatosMemoria Datos
+@inject NavigationManager Navigation
+
+<PageTitle>Administración de Partidos - Quiniela Mundial</PageTitle>
+
+<div class="container my-4">
+    <h2 class="mb-4">Administración de Partidos</h2>
+
+    <!-- Formulario para Registrar Nuevo Partido -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Registrar Nuevo Partido</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Equipo Local</label>
+                    <input type="text" class="form-control" @bind="nuevoEquipoLocal" placeholder="Ej: Brasil" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Equipo Visitante</label>
+                    <input type="text" class="form-control" @bind="nuevoEquipoVisitante" placeholder="Ej: Italia" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Fecha y Hora</label>
+                    <input type="datetime-local" class="form-control" @bind="nuevaFecha" />
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-success w-100" @onclick="AgregarPartido">
+                        Crear
+                    </button>
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(mensajeError))
+            {
+                <div class="alert alert-danger mt-3 mb-0">@mensajeError</div>
+            }
+        </div>
+    </div>
+
+    <!-- Lista y Edición de Partidos -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Gestión de Marcadores y Estado</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Encuentro</th>
+                            <th class="text-center" style="width: 220px;">Marcador Oficial</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var partido in Datos.Partidos)
+                        {
+                            <tr>
+                                <td>@partido.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <strong>@partido.EquipoLocal</strong> vs <strong>@partido.EquipoVisitante</strong>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        <input type="number" min="0" class="form-control text-center" style="width: 60px;"
+                                               @bind="partido.GolesLocal" disabled="@partido.Finalizado" />
+                                        <span>-</span>
+                                        <input type="number" min="0" class="form-control text-center" style="width: 60px;"
+                                               @bind="partido.GolesVisitante" disabled="@partido.Finalizado" />
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    @if (partido.Finalizado)
+                                    {
+                                        <span class="badge bg-secondary">Finalizado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Pendiente</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (!partido.Finalizado)
+                                    {
+                                        <button class="btn btn-primary btn-sm me-1" @onclick="() => GuardarMarcador(partido)">
+                                            Guardar Marcador
+                                        </button>
+                                        <button class="btn btn-warning btn-sm" @onclick="() => FinalizarPartido(partido)">
+                                            Finalizar Partido
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Sin acciones</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string nuevoEquipoLocal = "";
+    private string nuevoEquipoVisitante = "";
+    private DateTime nuevaFecha = DateTime.Now.AddDays(1);
+    private string mensajeError = "";
+
+    protected override void OnInitialized()
+    {
+        if (Datos.UsuarioActual == null || Datos.UsuarioActual.Rol != "Admin")
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private void AgregarPartido()
+    {
+        mensajeError = "";
+
+        if (string.IsNullOrWhiteSpace(nuevoEquipoLocal) || string.IsNullOrWhiteSpace(nuevoEquipoVisitante))
+        {
+            mensajeError = "Por favor ingrese el nombre de ambos equipos.";
+            return;
+        }
+
+        int nuevoId = Datos.Partidos.Any() ? Datos.Partidos.Max(p => p.Id) + 1 : 1;
+
+        Datos.Partidos.Add(new Partido
+        {
+            Id = nuevoId,
+            EquipoLocal = nuevoEquipoLocal.Trim(),
+            EquipoVisitante = nuevoEquipoVisitante.Trim(),
+            Fecha = nuevaFecha,
+            Finalizado = false
+        });
+
+        nuevoEquipoLocal = "";
+        nuevoEquipoVisitante = "";
+        nuevaFecha = DateTime.Now.AddDays(1);
+    }
+
+    private void GuardarMarcador(Partido partido)
+    {
+        // Los valores se actualizan automáticamente vía @bind
+    }
+
+    private void FinalizarPartido(Partido partido)
+    {
+        partido.Finalizado = true;
+    }
+}
