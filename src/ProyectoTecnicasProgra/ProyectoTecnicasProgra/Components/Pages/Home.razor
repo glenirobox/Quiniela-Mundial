@@ -1,44 +1,70 @@
 ﻿@page "/home"
 @using ProyectoTecnicasProgra.Data
+@using ProyectoTecnicasProgra.Models
 @inject DatosMemoria Datos
 @inject NavigationManager Navigation
 
-<PageTitle>Inicio - Quiniela Mundialista</PageTitle>
+<PageTitle>Inicio - Quiniela Mundial</PageTitle>
 
-<div class="container py-4">
+<div class="container my-4">
     <div class="p-4 mb-4 bg-light rounded-3 border">
-        <h1 class="display-6 fw-bold">¡Bienvenido, @(Datos.UsuarioActual?.Username ?? "Invitado")!</h1>
-        <p class="fs-5 text-muted">
-            Rol actual: <span class="badge bg-primary">@(Datos.UsuarioActual?.Rol ?? "Sin Rol")</span>
-        </p>
-        <hr class="my-3">
-        <p>Selecciona una opción del menú lateral para gestionar tus quinielas, ver el ranking de participantes o administrar los partidos del mundial.</p>
+        <h1 class="display-6 fw-bold text-primary">¡Bienvenido a la Quiniela Mundial 2026!</h1>
+        <p class="col-md-8 fs-5 text-muted">Gestiona tus pronósticos y compite por los primeros lugares.</p>
     </div>
 
+    @if (partidosProximos != null && partidosProximos.Any())
+    {
+        <div class="alert alert-warning border-warning shadow-sm mb-4" role="alert">
+            <h4 class="alert-heading fw-bold">¡Atención! Partidos en las próximas 24 horas</h4>
+            <p class="mb-1">Tienes los siguientes partidos programados pronto. Recuerda registrar tus pronósticos:</p>
+            <hr />
+            <ul class="mb-0">
+                @foreach (var p in partidosProximos)
+                {
+                    <li><strong>@p.EquipoLocal vs @p.EquipoVisitante</strong> - @p.Fecha.ToString("dd/MM/yyyy HH:mm")</li>
+                }
+            </ul>
+        </div>
+    }
+
     <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0 bg-primary text-white">
+        <div class="col-md-6">
+            <div class="card text-center shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Mis Pronósticos</h5>
-                    <p class="card-text">Ingresa tus predicciones para los próximos encuentros.</p>
+                    <h5 class="card-title fw-bold">Mis Pronósticos</h5>
+                    <p class="card-text">Ingresa y actualiza tus marcadores para acumular puntos en el ranking.</p>
+                    <a href="quiniela" class="btn btn-primary">Ir a Pronósticos</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0 bg-secondary text-white">
+        <div class="col-md-6">
+            <div class="card text-center shadow-sm h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Tabla de Posiciones</h5>
-                    <p class="card-text">Revisa tu lugar en el ranking global de la quiniela.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card h-100 shadow-sm border-0 bg-dark text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Partidos</h5>
-                    <p class="card-text">Consulta los horarios y resultados del torneo mundialista.</p>
+                    <h5 class="card-title fw-bold">Tabla de Posiciones</h5>
+                    <p class="card-text">Revisa el puntaje general y compite por los primeros lugares.</p>
+                    <a href="posiciones" class="btn btn-success">Ver Tabla</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@code {
+    private List<Partido> partidosProximos = new();
+
+    protected override void OnInitialized()
+    {
+        if (Datos.UsuarioActual == null)
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        var ahora = DateTime.Now;
+        var limite = ahora.AddHours(24);
+
+        partidosProximos = Datos.Partidos
+            .Where(p => !p.Finalizado && p.Fecha >= ahora && p.Fecha <= limite)
+            .ToList();
+    }
+}
