@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="ProyectoTecnicasProgra.Tests/ProyectoTecnicasProgra.Tests.csproj" />
   <Project Path="ProyectoTecnicasProgra/ProyectoTecnicasProgra.csproj" />
 </Solution>
