@@ -1,0 +1,82 @@
+﻿@page "/reportes"
+@using ProyectoTecnicasProgra.Data
+@using ProyectoTecnicasProgra.Models
+@inject DatosMemoria Datos
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<PageTitle>Reportes - Quiniela Mundial</PageTitle>
+
+<div class="container my-4">
+    <h2 class="mb-4">Módulo de Reportes</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Reporte General de Posiciones</h5>
+            <button class="btn btn-success btn-sm" @onclick="DescargarCsv">
+                Descargar CSV
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Usuario</th>
+                            <th>Puntos Totales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                        }
+                        @foreach (var u in ObtenerRanking())
+                        {
+                            <tr>
+                                <td><strong>@i</strong></td>
+                                <td>@u.Nombre</td>
+                                <td><span class="badge bg-primary">@u.Puntos pts</span></td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ExportadorService exportador = new ExportadorService();
+
+    protected override void OnInitialized()
+    {
+        if (Datos.UsuarioActual == null)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private IEnumerable<dynamic> ObtenerRanking()
+    {
+        return Datos.Usuarios
+            .Select(u => new
+            {
+                Nombre = u.Username,
+                Puntos = Datos.Pronosticos
+                    .Where(p => p.Username == u.Username)
+                    .Sum(p => p.PuntosObtenidos)
+            })
+            .OrderByDescending(x => x.Puntos);
+    }
+
+    private async Task DescargarCsv()
+    {
+        var ranking = ObtenerRanking();
+        var bytes = exportador.GenerarCsvPosiciones(ranking);
+        var base64 = Convert.ToBase64String(bytes);
+
+        await JS.InvokeVoidAsync("downloadFile", "Reporte_Posiciones.csv", "text/csv", base64);
+    }
+}
