@@ -7,7 +7,12 @@ public class DatosMemoria
     public List<Usuario> Usuarios { get; set; } = new()
     {
         new Usuario { Username = "Admin", Password = "123", Rol = "Admin" },
-        new Usuario { Username = "Glen", Password = "123", Rol = "Usuario" }
+        new Usuario { Username = "Glen", Password = "123", Rol = "Usuario" },
+        new Usuario { Username = "Carlos", Password = "123", Rol = "Usuario" },
+        new Usuario { Username = "Maria", Password = "123", Rol = "Usuario" },
+        new Usuario { Username = "Andres", Password = "123", Rol = "Usuario" },
+        new Usuario { Username = "Sofia", Password = "123", Rol = "Usuario" },
+        new Usuario { Username = "Luis", Password = "123", Rol = "Usuario" }
     };
 
     // Catálogo de Insignias disponibles
@@ -126,7 +131,19 @@ public class DatosMemoria
         new Partido { Id = 104, EquipoLocal = "Brasil", EquipoVisitante = "Mexico", Fecha = DateTime.Parse("2026-07-26"), Finalizado = false }
     };
 
-    public List<Pronostico> Pronosticos { get; set; } = new();
+    // Pronósticos precargados para los otros usuarios (así la Tabla de Posiciones tiene variedad)
+    public List<Pronostico> Pronosticos { get; set; } = new()
+    {
+        new Pronostico { Username = "Carlos", PartidoId = 1, GolesLocalPredichos = 2, GolesVisitantePredichos = 0 },
+        new Pronostico { Username = "Carlos", PartidoId = 2, GolesLocalPredichos = 2, GolesVisitantePredichos = 1 },
+        new Pronostico { Username = "Maria", PartidoId = 1, GolesLocalPredichos = 1, GolesVisitantePredichos = 0 },
+        new Pronostico { Username = "Maria", PartidoId = 2, GolesLocalPredichos = 3, GolesVisitantePredichos = 1 },
+        new Pronostico { Username = "Andres", PartidoId = 1, GolesLocalPredichos = 0, GolesVisitantePredichos = 2 },
+        new Pronostico { Username = "Andres", PartidoId = 2, GolesLocalPredichos = 2, GolesVisitantePredichos = 1 },
+        new Pronostico { Username = "Sofia", PartidoId = 1, GolesLocalPredichos = 2, GolesVisitantePredichos = 0 },
+        new Pronostico { Username = "Sofia", PartidoId = 3, GolesLocalPredichos = 1, GolesVisitantePredichos = 1 },
+        new Pronostico { Username = "Luis", PartidoId = 2, GolesLocalPredichos = 1, GolesVisitantePredichos = 1 }
+    };
 
     public Usuario? UsuarioActual { get; set; }
 
